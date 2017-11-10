@@ -1,2 +1,3 @@
 # DroneESCstyringMedTaranis
-program that controls a drone's escs with a taranis hooked up to a raspberry pi
+A program that controls a drone's escs with a flightstick hooked up to a raspberry pi. 
+

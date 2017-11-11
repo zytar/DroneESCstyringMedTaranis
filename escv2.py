@@ -10,6 +10,7 @@ my_joystick = pygame.joystick.Joystick(0)
 my_joystick.init()
 clock = pygame.time.Clock()
 
+
 #ESC's in these GPIO pins
 ESC1=4
 ESC2=17
@@ -31,29 +32,46 @@ throttle3 = ESC3
 throttle4 = ESC4
 interval = 0.1
 
+
 #y1 = my_joystick.get_axis(3)
 
 #######################################################################
 
 print "Do you want to arm the motors? (yes or no)"
 
-def yes(my_joystick):
+def yes():
 	print "PLEASE ENSURE THAT PROPELLERS ARE DETACHED, BECAUSE THE ENGINES WILL SPIN IN 5 SECONDS!"
 	time.sleep(5)
 	print "Control speed with joystick"
 	pygame.init()
-	my_joystick.init()
-	y1 = my_joystick.get_axis(3)
-	speed = 700+y1*1300
+	#y1 = my_joystick.get_axis(3)
+	#speed = 700+y1*1300
+	inp = raw_input()
+
+        my_joystick = pygame.joystick.Joystick(0)
+        my_joystick.init()
+        clock = pygame.time.Clock()
+
 	while True:
+
+                for event in pygame.event.get():
+                        print "y1= " , my_joystick.get_axis(3)
+                        clock.tick(1000)
+
+		y1 = my_joystick.get_axis(3)
+		print y1
+		if y1>0:
+			speed = 700+y1*1300
+		else:
+			speed = 700
+
 		pi.set_servo_pulsewidth(ESC1, speed)
         	pi.set_servo_pulsewidth(ESC2, speed)
        		pi.set_servo_pulsewidth(ESC3, speed)
         	pi.set_servo_pulsewidth(ESC4, speed)
-        	inp = raw_input()
 
 		if inp == "yes":
-	            arm(my_joystick)
+	            arm()
 		    break
 		elif inp == "stop":
 		    stop()
@@ -61,13 +79,12 @@ def yes(my_joystick):
 		elif inp == "no":
 		    stop()
 		    break
-
 	        else:
-       		    print "Whoops, wrong button!"
+       		    print ""
 
 #####################################################################
 
-def arm(my_joystick): #This is the arming procedure of an ESC
+def arm(): #This is the arming procedure of an ESC
 	print "Connect the battery and press Enter. Props should be detached!"
 	inp = raw_input()
 	if inp == '':
@@ -83,7 +100,7 @@ def arm(my_joystick): #This is the arming procedure of an ESC
 	        pi.set_servo_pulsewidth(ESC2, min_value)
 	        pi.set_servo_pulsewidth(ESC3, min_value)
 	       	pi.set_servo_pulsewidth(ESC4, min_value)
-	        yes(my_joystick)
+	        yes()
 
 #######################################################################
 
@@ -96,8 +113,8 @@ def controller():
 		for event in pygame.event.get():
                         print "y1= " , my_joystick.get_axis(3)
                         clock.tick(1000)
-		pygame.quit()
-		arm(my_joystick)
+		arm()
+	#pygame.quit()
 
 #######################################################################
 
